@@ -69,211 +69,68 @@ def draw_volleyball_court(
 
     return court_image
 
-# def draw_points_on_pitch(
-#     config: SoccerPitchConfiguration,
-#     xy: np.ndarray,
-#     face_color: sv.Color = sv.Color.RED,
-#     edge_color: sv.Color = sv.Color.BLACK,
-#     radius: int = 10,
-#     thickness: int = 2,
-#     padding: int = 50,
-#     scale: float = 0.1,
-#     pitch: Optional[np.ndarray] = None
-# ) -> np.ndarray:
-#     """
-#     Draws points on a soccer pitch.
+def draw_points_on_court(
+    config: VolleyballCourtConfiguration,
+    xy: np.ndarray,
+    face_color: sv.Color = sv.Color.RED,
+    edge_color: sv.Color = sv.Color.BLACK,
+    radius: int = 1,
+    thickness: int = 1,
+    padding: int = 20,
+    scale: float = 0.1,
+    court: Optional[np.ndarray] = None
+) -> np.ndarray:
+    """
+    Draws points on a volleyball court.
 
-#     Args:
-#         config (SoccerPitchConfiguration): Configuration object containing the
-#             dimensions and layout of the pitch.
-#         xy (np.ndarray): Array of points to be drawn, with each point represented by
-#             its (x, y) coordinates.
-#         face_color (sv.Color, optional): Color of the point faces.
-#             Defaults to sv.Color.RED.
-#         edge_color (sv.Color, optional): Color of the point edges.
-#             Defaults to sv.Color.BLACK.
-#         radius (int, optional): Radius of the points in pixels.
-#             Defaults to 10.
-#         thickness (int, optional): Thickness of the point edges in pixels.
-#             Defaults to 2.
-#         padding (int, optional): Padding around the pitch in pixels.
-#             Defaults to 50.
-#         scale (float, optional): Scaling factor for the pitch dimensions.
-#             Defaults to 0.1.
-#         pitch (Optional[np.ndarray], optional): Existing pitch image to draw points on.
-#             If None, a new pitch will be created. Defaults to None.
+    Args:
+        config (VolleyballCourtConfiguration): Configuration object containing the
+            dimensions and layout of the court.
+        xy (np.ndarray): Array of points to be drawn, with each point represented by
+            its (x, y) coordinates.
+        face_color (sv.Color, optional): Color of the point faces.
+            Defaults to sv.Color.RED.
+        edge_color (sv.Color, optional): Color of the point edges.
+            Defaults to sv.Color.BLACK.
+        radius (int, optional): Radius of the points in pixels.
+            Defaults to 10.
+        thickness (int, optional): Thickness of the point edges in pixels.
+            Defaults to 2.
+        padding (int, optional): Padding around the court in pixels.
+            Defaults to 50.
+        scale (float, optional): Scaling factor for the court dimensions.
+            Defaults to 0.1.
+        court (Optional[np.ndarray], optional): Existing court image to draw points on.
+            If None, a new court will be created. Defaults to None.
 
-#     Returns:
-#         np.ndarray: Image of the soccer pitch with points drawn on it.
-#     """
-#     if pitch is None:
-#         pitch = draw_pitch(
-#             config=config,
-#             padding=padding,
-#             scale=scale
-#         )
+    Returns:
+        np.ndarray: Image of the volleyball court with points drawn on it.
+    """
+    if court is None:
+        court = draw_volleyball_court(
+            config=config,
+            padding=padding,
+            scale=scale
+        )
 
-#     for point in xy:
-#         scaled_point = (
-#             int(point[0] * scale) + padding,
-#             int(point[1] * scale) + padding
-#         )
-#         cv2.circle(
-#             img=pitch,
-#             center=scaled_point,
-#             radius=radius,
-#             color=face_color.as_bgr(),
-#             thickness=-1
-#         )
-#         cv2.circle(
-#             img=pitch,
-#             center=scaled_point,
-#             radius=radius,
-#             color=edge_color.as_bgr(),
-#             thickness=thickness
-#         )
+    for point in xy:
+        scaled_point = (
+            int(point[0] * scale) + padding,
+            int(point[1] * scale) + padding
+        )
+        cv2.circle(
+            img=court,
+            center=scaled_point,
+            radius=radius,
+            color=face_color.as_bgr(),
+            thickness=-1
+        )
+        cv2.circle(
+            img=court,
+            center=scaled_point,
+            radius=radius,
+            color=edge_color.as_bgr(),
+            thickness=thickness
+        )
 
-#     return pitch
-
-
-# def draw_paths_on_pitch(
-#     config: SoccerPitchConfiguration,
-#     paths: List[np.ndarray],
-#     color: sv.Color = sv.Color.WHITE,
-#     thickness: int = 2,
-#     padding: int = 50,
-#     scale: float = 0.1,
-#     pitch: Optional[np.ndarray] = None
-# ) -> np.ndarray:
-#     """
-#     Draws paths on a soccer pitch.
-
-#     Args:
-#         config (SoccerPitchConfiguration): Configuration object containing the
-#             dimensions and layout of the pitch.
-#         paths (List[np.ndarray]): List of paths, where each path is an array of (x, y)
-#             coordinates.
-#         color (sv.Color, optional): Color of the paths.
-#             Defaults to sv.Color.WHITE.
-#         thickness (int, optional): Thickness of the paths in pixels.
-#             Defaults to 2.
-#         padding (int, optional): Padding around the pitch in pixels.
-#             Defaults to 50.
-#         scale (float, optional): Scaling factor for the pitch dimensions.
-#             Defaults to 0.1.
-#         pitch (Optional[np.ndarray], optional): Existing pitch image to draw paths on.
-#             If None, a new pitch will be created. Defaults to None.
-
-#     Returns:
-#         np.ndarray: Image of the soccer pitch with paths drawn on it.
-#     """
-#     if pitch is None:
-#         pitch = draw_pitch(
-#             config=config,
-#             padding=padding,
-#             scale=scale
-#         )
-
-#     for path in paths:
-#         scaled_path = [
-#             (
-#                 int(point[0] * scale) + padding,
-#                 int(point[1] * scale) + padding
-#             )
-#             for point in path if point.size > 0
-#         ]
-
-#         if len(scaled_path) < 2:
-#             continue
-
-#         for i in range(len(scaled_path) - 1):
-#             cv2.line(
-#                 img=pitch,
-#                 pt1=scaled_path[i],
-#                 pt2=scaled_path[i + 1],
-#                 color=color.as_bgr(),
-#                 thickness=thickness
-#             )
-
-#         return pitch
-
-
-# def draw_pitch_voronoi_diagram(
-#     config: SoccerPitchConfiguration,
-#     team_1_xy: np.ndarray,
-#     team_2_xy: np.ndarray,
-#     team_1_color: sv.Color = sv.Color.RED,
-#     team_2_color: sv.Color = sv.Color.WHITE,
-#     opacity: float = 0.5,
-#     padding: int = 50,
-#     scale: float = 0.1,
-#     pitch: Optional[np.ndarray] = None
-# ) -> np.ndarray:
-#     """
-#     Draws a Voronoi diagram on a soccer pitch representing the control areas of two
-#     teams.
-
-#     Args:
-#         config (SoccerPitchConfiguration): Configuration object containing the
-#             dimensions and layout of the pitch.
-#         team_1_xy (np.ndarray): Array of (x, y) coordinates representing the positions
-#             of players in team 1.
-#         team_2_xy (np.ndarray): Array of (x, y) coordinates representing the positions
-#             of players in team 2.
-#         team_1_color (sv.Color, optional): Color representing the control area of
-#             team 1. Defaults to sv.Color.RED.
-#         team_2_color (sv.Color, optional): Color representing the control area of
-#             team 2. Defaults to sv.Color.WHITE.
-#         opacity (float, optional): Opacity of the Voronoi diagram overlay.
-#             Defaults to 0.5.
-#         padding (int, optional): Padding around the pitch in pixels.
-#             Defaults to 50.
-#         scale (float, optional): Scaling factor for the pitch dimensions.
-#             Defaults to 0.1.
-#         pitch (Optional[np.ndarray], optional): Existing pitch image to draw the
-#             Voronoi diagram on. If None, a new pitch will be created. Defaults to None.
-
-#     Returns:
-#         np.ndarray: Image of the soccer pitch with the Voronoi diagram overlay.
-#     """
-#     if pitch is None:
-#         pitch = draw_pitch(
-#             config=config,
-#             padding=padding,
-#             scale=scale
-#         )
-
-#     scaled_width = int(config.width * scale)
-#     scaled_length = int(config.length * scale)
-
-#     voronoi = np.zeros_like(pitch, dtype=np.uint8)
-
-#     team_1_color_bgr = np.array(team_1_color.as_bgr(), dtype=np.uint8)
-#     team_2_color_bgr = np.array(team_2_color.as_bgr(), dtype=np.uint8)
-
-#     y_coordinates, x_coordinates = np.indices((
-#         scaled_width + 2 * padding,
-#         scaled_length + 2 * padding
-#     ))
-
-#     y_coordinates -= padding
-#     x_coordinates -= padding
-
-#     def calculate_distances(xy, x_coordinates, y_coordinates):
-#         return np.sqrt((xy[:, 0][:, None, None] * scale - x_coordinates) ** 2 +
-#                        (xy[:, 1][:, None, None] * scale - y_coordinates) ** 2)
-
-#     distances_team_1 = calculate_distances(team_1_xy, x_coordinates, y_coordinates)
-#     distances_team_2 = calculate_distances(team_2_xy, x_coordinates, y_coordinates)
-
-#     min_distances_team_1 = np.min(distances_team_1, axis=0)
-#     min_distances_team_2 = np.min(distances_team_2, axis=0)
-
-#     control_mask = min_distances_team_1 < min_distances_team_2
-
-#     voronoi[control_mask] = team_1_color_bgr
-#     voronoi[~control_mask] = team_2_color_bgr
-
-#     overlay = cv2.addWeighted(voronoi, opacity, pitch, 1 - opacity, 0)
-
-#     return overlay
+    return court
